@@ -3,7 +3,6 @@ pipeline {
     tools {
         jdk 'jdk17'
         nodejs 'node-16'
-        sonarqube 'SonarQube-Server'
     }
     environment {
         SCANNER_HOME = tool 'SonarQube-Server'
@@ -11,7 +10,7 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "abdraheem98"
         DOCKER_PASS = 'dockerhub'
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
 
@@ -29,8 +28,7 @@ pipeline {
         stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=jenkins-project \
-                    -Dsonar.projectKey=jenkins-project'''
+                    sh "$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=jenkins-project -Dsonar.projectKey=jenkins-project"
                 }
             }
         }
